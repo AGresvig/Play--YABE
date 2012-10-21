@@ -1,10 +1,11 @@
 package models;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+
+import org.joda.time.DateTime;
 
 import play.data.format.Formats;
 import play.data.validation.Constraints;
@@ -19,7 +20,7 @@ public class Post extends Model {
 	public Long id;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date datePosted;
+	public DateTime datePosted;
 	
 	@Constraints.Required
 	public String title;
@@ -31,14 +32,19 @@ public class Post extends Model {
 	@Constraints.Required
 	public User writtenBy;
 	
+	@Constraints.Required
+	@ManyToOne
+	private Category category;
+	
 	public static Finder<Long, Post> find = new Finder<Long, Post>(
 			Long.class, Post.class);
 	
-	public Post(Date datePosted, String title, String content, User writtenBy) {
+	public Post(DateTime datePosted, String title, String content, User writtenBy, Category category) {
 		super();
 		this.datePosted = datePosted;
 		this.title = title;
 		this.content = content;
 		this.writtenBy = writtenBy;
+		this.category = category;
 	}	
 }

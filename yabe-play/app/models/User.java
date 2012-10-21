@@ -1,13 +1,13 @@
 package models;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import play.db.ebean.Model;
+import org.joda.time.DateTime;
+
 import play.data.format.Formats;
-import play.data.validation.*;
+import play.data.validation.Constraints;
+import play.db.ebean.Model;
 
 @Entity
 public class User extends Model {
@@ -24,7 +24,7 @@ public class User extends Model {
 	public String lastName;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date dateofBirth;
+	public DateTime dateOfBirth;
 	
 	@Constraints.Email
 	public String email;
@@ -37,12 +37,12 @@ public class User extends Model {
 	public static Finder<Long, User> find = new Finder<Long, User>(
 			Long.class, User.class);
 	
-	public User(String firstName, String lastName, Date dateofBirth,
+	public User(String firstName, String lastName, DateTime dateofBirth,
 			String email, String password, boolean isAdmin) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.dateofBirth = dateofBirth;
+		this.dateOfBirth = dateofBirth;
 		this.email = email;
 		this.password = password;
 		this.isAdmin = isAdmin;
