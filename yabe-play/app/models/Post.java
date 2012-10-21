@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
+import play.data.format.Formats;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 @Entity
@@ -15,10 +17,18 @@ public class Post extends Model {
 	
 	@Id
 	public Long id;
+	
+	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date datePosted;
+	
+	@Constraints.Required
 	public String title;
+	
 	@Lob
+	@Constraints.Required
 	public String content;
+	
+	@Constraints.Required
 	public User writtenBy;
 	
 	public static Finder<Long, Post> find = new Finder<Long, Post>(
