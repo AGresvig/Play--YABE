@@ -14,38 +14,40 @@ public class User extends Model {
 
 	private static final long serialVersionUID = 893814552367259173L;
 	
-	@Id
-	public Long id;
-	
+    @Id
+    @Constraints.Required
+    @Formats.NonEmpty
+    public String email;
+
 	@Constraints.Required
 	public String firstName;
 	
 	@Constraints.Required
 	public String lastName;
 	
-	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public DateTime dateOfBirth;
-	
-	@Constraints.Email
-	public String email;
+	/*@Formats.DateTime(pattern="yyyy-MM-dd")
+	public DateTime dateOfBirth;*/
 	
 	@Constraints.Required
 	public String password;
 	
 	public boolean isAdmin;	
 
-	public static Finder<Long, User> find = new Finder<Long, User>(
-			Long.class, User.class);
-	
+	public static Finder<String, User> find = new Finder<String, User>(
+			String.class, User.class);
+
+    public User() {
+        super();
+    }
+
 	public User(String firstName, String lastName, DateTime dateofBirth,
 			String email, String password, boolean isAdmin) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.dateOfBirth = dateofBirth;
+		//this.dateOfBirth = dateofBirth;
 		this.email = email;
 		this.password = password;
 		this.isAdmin = isAdmin;
 	}
-			
 }

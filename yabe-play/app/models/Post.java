@@ -1,8 +1,11 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.joda.time.DateTime;
@@ -17,13 +20,16 @@ public class Post extends Model {
 	private static final long serialVersionUID = 4166617896966160322L;
 	
 	@Id
-	public Long id;
-	
-	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public DateTime datePosted;
+	@Constraints.Required
+	@Formats.NonEmpty
+	public String titleString;
 	
 	@Constraints.Required
+	@Formats.NonEmpty
 	public String title;
+	
+	/*@Formats.DateTime(pattern="yyyy-MM-dd")
+	public DateTime datePosted;*/
 	
 	@Lob
 	@Constraints.Required
@@ -34,17 +40,31 @@ public class Post extends Model {
 	
 	@Constraints.Required
 	@ManyToOne
-	private Category category;
+    public Category category;
 	
-	public static Finder<Long, Post> find = new Finder<Long, Post>(
-			Long.class, Post.class);
+	@ManyToMany
+    public List<Tag> tags;
 	
-	public Post(DateTime datePosted, String title, String content, User writtenBy, Category category) {
+	public static Finder<String, Post> find = new Finder<String, Post>(
+			String.class, Post.class);
+
+    public Post() {
+        super();
+    }
+
+    public Post(DateTime datePosted, String title, String content, User writtenBy, Category category) {
 		super();
-		this.datePosted = datePosted;
+		//this.datePosted = datePosted;
 		this.title = title;
 		this.content = content;
 		this.writtenBy = writtenBy;
 		this.category = category;
 	}	
+	
+	/**
+	 * Converts the title to an ID-string
+	 */
+	public void setFormattedTitleString(String stringToFormat) {
+		titleString = stringToFormat.replace(' ', '-').toLowerCase();
+	}
 }
