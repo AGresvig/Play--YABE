@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -22,20 +23,17 @@ public class Post extends Model {
 	@Id
 	@Constraints.Required
 	@Formats.NonEmpty
-	public String titleString;
-	
-	@Constraints.Required
-	@Formats.NonEmpty
 	public String title;
 	
-	/*@Formats.DateTime(pattern="yyyy-MM-dd")
-	public DateTime datePosted;*/
+	@Formats.DateTime(pattern="yyyy-MM-dd")
+	public DateTime datePosted;
 	
-	@Lob
+	//@Lob Cant get this to work with ebean. Needs research.
 	@Constraints.Required
 	public String content;
 	
 	@Constraints.Required
+    @ManyToOne
 	public User writtenBy;
 	
 	@Constraints.Required
@@ -52,19 +50,20 @@ public class Post extends Model {
         super();
     }
 
-    public Post(DateTime datePosted, String title, String content, User writtenBy, Category category) {
+    public Post(DateTime datePosted, String title, String content, User writtenBy, Category category, List<Tag> tags) {
 		super();
-		//this.datePosted = datePosted;
+		this.datePosted = datePosted;
 		this.title = title;
 		this.content = content;
 		this.writtenBy = writtenBy;
 		this.category = category;
-	}	
+        this.tags = tags;
+	}
 	
 	/**
 	 * Converts the title to an ID-string
 	 */
-	public void setFormattedTitleString(String stringToFormat) {
-		titleString = stringToFormat.replace(' ', '-').toLowerCase();
+	public String setFormattedTitleString(String stringToFormat) {
+		return stringToFormat.replace(' ', '-').toLowerCase();
 	}
 }

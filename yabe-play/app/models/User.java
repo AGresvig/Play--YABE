@@ -9,6 +9,8 @@ import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
+import java.util.Date;
+
 @Entity
 public class User extends Model {
 
@@ -25,8 +27,8 @@ public class User extends Model {
 	@Constraints.Required
 	public String lastName;
 	
-	/*@Formats.DateTime(pattern="yyyy-MM-dd")
-	public DateTime dateOfBirth;*/
+	@Formats.DateTime(pattern="yyyy-MM-dd")
+	public DateTime dateOfBirth;
 	
 	@Constraints.Required
 	public String password;
@@ -40,12 +42,12 @@ public class User extends Model {
         super();
     }
 
-	public User(String firstName, String lastName, DateTime dateofBirth,
+	public User(String firstName, String lastName, DateTime dateOfBirth,
 			String email, String password, boolean isAdmin) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		//this.dateOfBirth = dateofBirth;
+		this.dateOfBirth = dateOfBirth;
 		this.email = email;
 		this.password = password;
 		this.isAdmin = isAdmin;
