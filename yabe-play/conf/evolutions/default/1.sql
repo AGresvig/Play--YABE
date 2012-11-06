@@ -13,7 +13,7 @@ create table post (
   title                     varchar(255) not null,
   date_posted               timestamp,
   content                   varchar(255),
-  written_by_email          varchar(255),
+  author_email              varchar(255),
   category_name             varchar(255),
   constraint pk_post primary key (title))
 ;
@@ -48,8 +48,8 @@ create sequence tag_seq;
 
 create sequence user_seq;
 
-alter table post add constraint fk_post_writtenBy_1 foreign key (written_by_email) references user (email) on delete restrict on update restrict;
-create index ix_post_writtenBy_1 on post (written_by_email);
+alter table post add constraint fk_post_author_1 foreign key (author_email) references user (email) on delete restrict on update restrict;
+create index ix_post_author_1 on post (author_email);
 alter table post add constraint fk_post_category_2 foreign key (category_name) references category (name) on delete restrict on update restrict;
 create index ix_post_category_2 on post (category_name);
 

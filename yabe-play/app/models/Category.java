@@ -35,5 +35,5 @@ public class Category extends Model {
 		this.name = name;
 		this.dateCreated = dateCreated;
 	}
-	
+
 }

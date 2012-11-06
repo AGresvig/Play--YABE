@@ -15,9 +15,9 @@ import org.junit.runner.RunWith;
 import org.yaml.snakeyaml.Yaml;
 import runners.PlayJUnitRunner;
 
+import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +37,9 @@ public class ModelTest {
 	private static String EMAIL = "aksel@agresvig.com";
 	private static String POST_ONE = "Post One";
 	private static String CATEGORY_ONE = "Category One";
-	private static String TAG_ONE = "Tag One";
+    private static final String POST_CONTENT = "This is the first post!";
 
+	private static String TAG_ONE = "Tag One";
     public static DdlGenerator ddl;
     public static EbeanServer server;
 
@@ -106,15 +107,7 @@ public class ModelTest {
 
     @Test
     public void testCreateUser() {
-        User bob = new User();
-        bob.firstName = "Bob";
-        bob.lastName = "Bobson";
-        bob.password = "topsecret";
-        bob.email = "bob@bobson.com";
-        bob.dateOfBirth = new DateTime(1970, 05, 05, 0, 0);
-        bob.isAdmin = false;
-
-        bob.save();
+        User.create("Bob", "Bobson", "bob@bobson.com", "topsecret");
 
         User bobAgain = User.find.byId("bob@bobson.com");
         assertThat(bobAgain.dateOfBirth).isNotNull();
@@ -176,15 +169,7 @@ public class ModelTest {
 
     @Test
     public void testCreateAndRetrieveNewPost() {
-        User author = User.find.byId(EMAIL);
-        Category category = Category.find.byId(CATEGORY_ONE);
-        Tag tag = Tag.find.byId(TAG_ONE);
-        List<Tag> tagList = new ArrayList<Tag>();
-        tagList.add(tag);
-
-        Post newPost = new Post(new DateTime(), POST_ONE, "This is the first post!",
-                author, category, tagList);
-        newPost.save();
+        createPost();
 
         List<Post> postList = Post.find.all();
         assertThat(postList).isNotEmpty();
@@ -192,29 +177,73 @@ public class ModelTest {
         Post postOne = Post.find.byId(POST_ONE);
 
         assertThat(postOne).isNotNull();
-        assertThat(postOne.datePosted).isNotNull();
-        assertThat(postOne.content).contains("This is the first post!");
-        assertThat(postOne.title).isNotEmpty();
-        assertThat(postOne.category).isEqualTo(category);
-        assertThat(postOne.tags).contains(tag);
-        assertThat(postOne.writtenBy).equals(author);
+        compareDate(postOne.datePosted, new DateTime());
+        assertThat(postOne.content).contains(POST_CONTENT);
+        assertThat(postOne.title).isEqualTo(POST_ONE);
+        assertThat(postOne.category.name).isEqualTo(CATEGORY_ONE);
+        assertThat(postOne.tags).isNotEmpty();
+        assertThat(postOne.tags.get(0).name).isEqualTo(TAG_ONE);
+        assertThat(postOne.author.email).isEqualTo(EMAIL);
     }
 
-    private User createUser() {
-        return new User("Aksel", "Gresvig", new DateTime(), EMAIL, "secret", true);
+    @Test
+    public void findPostsByUser() {
+        createPost();
+
+        List<Post> posts = Post.findByUser(EMAIL);
+        assertThat(posts).isNotEmpty();
+        assertThat(posts.get(0).title).isEqualTo(POST_ONE);
     }
 
-    private Post createPost(User author, Category category, List<Tag> tags) {
-        return new Post(new DateTime(), "Post One", "This is the blog post content",
-                author, category, tags);
+    @Test
+    public void findPostsByCategory() {
+        createPost();
+
+        List<Post> posts = Post.findByCategory(CATEGORY_ONE);
+        assertThat(posts).isNotEmpty();
+        assertThat(posts.get(0).title).isEqualTo(POST_ONE);
     }
 
-    private Category createCategory() {
-        return new Category("Category One", new DateTime());
+    @Test
+    public void testAddRemoveTags() {
+        createPost();
+        Post post = Post.find.byId(POST_ONE);
+        assertThat(post.tags).hasSize(1);
+
+        String tagTwo = "Tag Two";
+        Tag.create(tagTwo);
+
+        //Test add
+        Post.addTag(POST_ONE, tagTwo);
+        post = Post.find.byId(POST_ONE);
+        assertThat(post.tags).hasSize(2);
+
+        //Check that we cant add same tag twice
+        Post.addTag(POST_ONE, tagTwo);
+        post = Post.find.byId(POST_ONE);
+        assertThat(post.tags).hasSize(2);
+
+        //Test remove
+        Post.removeTag(POST_ONE, TAG_ONE);
+        post = Post.find.byId(POST_ONE);
+        assertThat(post.tags).hasSize(1);
+        assertThat(post.tags.get(0).name).isEqualTo(tagTwo);
     }
 
-    private Tag createTag() {
-        return new Tag("Tag One", new DateTime());
+    @Test(expected = PersistenceException.class)
+    public void testPrimaryKeyViolationForPost() {
+        createPost();
+        createPost();
+    }
+
+    /**
+     * Helpmethod that just inserts basic test-post
+     * @return
+     */
+    private Post createPost() {
+        Post p = Post.create(POST_ONE, POST_CONTENT, EMAIL, CATEGORY_ONE);
+        Post.addTag(POST_ONE, TAG_ONE);
+        return p;
     }
 
     private void compareDate(DateTime date1, DateTime date2) {

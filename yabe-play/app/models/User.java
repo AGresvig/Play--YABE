@@ -1,15 +1,16 @@
 package models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
+import helper.CustomDateTimeDeserializer;
+import helper.CustomDateTimeSerializer;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.DateTime;
-
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class User extends Model {
@@ -26,8 +27,10 @@ public class User extends Model {
 	
 	@Constraints.Required
 	public String lastName;
-	
-	@Formats.DateTime(pattern="yyyy-MM-dd")
+
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	@Formats.DateTime(pattern=CustomDateTimeSerializer.SERIALIZE_FORMAT)
 	public DateTime dateOfBirth;
 	
 	@Constraints.Required
@@ -52,4 +55,14 @@ public class User extends Model {
 		this.password = password;
 		this.isAdmin = isAdmin;
 	}
+
+    /**
+     * Creates new User and persists to database
+     *
+     */
+    public static User create(String firstName, String lastName, String email, String password) {
+        User user = new User(firstName, lastName, new DateTime(), email, password, false);
+        user.save();
+        return user;
+    }
 }
