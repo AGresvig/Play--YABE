@@ -77,6 +77,7 @@ public class ModelTest {
     }
 
     private void loadAndSaveTestdata() {
+    	System.out.println("TEst:" + Thread.currentThread().getContextClassLoader());
         InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("testdata.yaml");
         //Using Yaml instance with custom constructor here in order to support JodaTime dates with Yaml testing..
         Yaml yaml = new Yaml(new YamlJodaTimeConstructor());
