@@ -31,6 +31,7 @@ public class User extends Model {
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	@Formats.DateTime(pattern=CustomDateTimeSerializer.SERIALIZE_FORMAT)
+    @Constraints.Required
 	public DateTime dateOfBirth;
 	
 	@Constraints.Required

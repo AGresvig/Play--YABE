@@ -18,7 +18,8 @@ public class Tag extends Model {
 	@Constraints.Required
 	@Formats.NonEmpty
 	public String name;
-	
+
+    @Constraints.Required
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public DateTime dateCreated;
 	

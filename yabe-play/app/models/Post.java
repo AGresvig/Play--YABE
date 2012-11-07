@@ -36,7 +36,6 @@ public class Post extends Model {
     @ManyToOne
 	public User author;
 	
-	@Constraints.Required
 	@ManyToOne
     public Category category;
 	
