@@ -95,7 +95,7 @@ public class Users extends Controller {
         try {
             user = mapper.readValue(request, User.class);
             user.save();
-            //user.
+            user.
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return badRequest(e.getCause().getMessage());
