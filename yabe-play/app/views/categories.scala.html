@@ -1,0 +1,13 @@
+@(categories: List[Category])
+
+@main("Welcome to The Category page") {
+    
+    <h1>List of categories:</h1>
+
+    <ul>
+    @for(category <- categories) {
+        <li>@category.name</li>
+    }
+    </ul>
+    
+}
