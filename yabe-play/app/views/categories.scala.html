@@ -1,13 +1,26 @@
 @(categories: List[Category])
 
 @main("Welcome to The Category page") {
-    
-    <h1>List of categories:</h1>
 
-    <ul>
+    <div class="hero-unit">
+        <h1>Welcome to YABE category page</h1>
+        <p>Here is a list of categories.</p>
+    </div>
+
+    <div class="row-fluid">
+        <ul>
+        @for(category <- categories) {
+            <li><h3>@category.name</h3></li>
+        }
+        </ul>
+    </div>
+    
+}  {
+    <h3 class="nav-header">List of categories:</h3>
+
+    <ul class="nav nav-list">
     @for(category <- categories) {
         <li>@category.name</li>
     }
     </ul>
-    
 }
