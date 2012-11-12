@@ -4,7 +4,6 @@ import models.Category;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
-import views.html.categories;
 
 import java.util.List;
 
@@ -25,13 +24,6 @@ public class Categories {
 
         List<Category> categories = Category.find.all();
         return ok(Json.toJson(categories)).as("application/json");
-    }
-
-    public static Result showAll() {
-        Logger.debug("Showing all Categories");
-
-        List<Category> catList = Category.find.all();
-        return ok(categories.render(catList));
     }
 
     public static Result retrieve(String id) {
