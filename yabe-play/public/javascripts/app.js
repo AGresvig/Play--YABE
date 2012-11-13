@@ -19,8 +19,15 @@ $(function() {
     //The Category collection
     var CategoryList = Backbone.Collection.extend({
         model: Category,
-        url: '/categories'
+        url: '/categories',
+
+        parse: function (obj) {
+            return obj;
+        }
     });
+
+    //Create global category list
+    var Categories = new CategoryList();
 
     //The Category view element
     var CategoryView = Backbone.View.extend({
@@ -31,16 +38,19 @@ $(function() {
         //Cache the template defined in the main html, using Underscore.JS
         template: _.template($('#sidebar-template').html()),
 
+        initialize: function () {
+            this.collection.on('reset', this.render, this);
+        },
+
         //Our render-function bootstraps the model JSON data into the template
         render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
+            this.$el.html(this.template({
+                categories: this.collection.toJSON()
+            }));
 
             return this; //To allow for daisy-chaining calls
         }
     });
-
-    //Create global category list
-    var Categories = new CategoryList();
 
     //This view resembles the the main area of our app
     var YabeApp = Backbone.View.extend({
@@ -52,7 +62,7 @@ $(function() {
         initialize: function() {
             Categories.fetch();
 
-            var catView = new CategoryView({model: Categories}).render();
+            var catView = new CategoryView({collection: Categories}).render();
             this.$('#sidebar').append(catView.render().el);
         }
     });
