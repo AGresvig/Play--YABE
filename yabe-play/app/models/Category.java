@@ -37,4 +37,15 @@ public class Category extends Model {
 		this.dateCreated = dateCreated;
 	}
 
+    /**
+     * Creates a new category and saves it
+     * @param name
+     * @return
+     */
+    public static Category create(String name) {
+        Category category = new Category(name, new DateTime());
+        category.save();
+        return category;
+    }
+
 }
