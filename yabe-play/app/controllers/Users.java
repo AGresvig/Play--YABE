@@ -73,7 +73,7 @@ public class Users extends Controller {
             user = mapper.readValue(request, User.class);
             user.save();
         } catch (Exception e) {
-            e.printStackTrace();  //TODO Bruk Logger.ERROR()
+            Logger.error(e.getMessage(), e.getCause());
             return badRequest(e.getCause().getMessage());
         }
         return created(Json.toJson(user));
@@ -100,6 +100,6 @@ public class Users extends Controller {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return badRequest(e.getCause().getMessage());
         }
-        return ok(Json.toJson(user)).as("application/json");// created(Json.toJson(user));
+        return ok(Json.toJson(user)).as("application/json");
     }
 }
