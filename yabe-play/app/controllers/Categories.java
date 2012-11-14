@@ -1,31 +1,13 @@
 package controllers;
 
 import models.Category;
-<<<<<<< HEAD
-import models.User;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import play.Logger;
 import play.libs.Json;
-import play.mvc.BodyParser;
 import play.mvc.Controller;
-import play.mvc.Result;
-
-import javax.persistence.PersistenceException;
-import java.util.List;
-
-import static play.mvc.Results.badRequest;
-import static play.mvc.Results.created;
-=======
-import play.Logger;
-import play.libs.Json;
 import play.mvc.Result;
 import views.html.categories;
 
 import java.util.List;
-
->>>>>>> beyond_lecture_1
-import static play.mvc.Results.ok;
 
 /**
  * Controller class for the {@link models.Category} object.
